@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing head content -->
+</head>
+<body>
+    <h1>Game Over</h1>
+    <p>Your Score: <span id="finalScore"></span></p>
+
+    <button onclick="replayGame()">Replay Game</button>
+
+    <script>
+        window.onload = function () {
+            // Retrieve the score from the query parameter
+            var urlParams = new URLSearchParams(window.location.search);
+            var score = urlParams.get('score');
+
+            // Display the score on the page
+            document.getElementById('finalScore').textContent = score;
+        };
+
+        function replayGame() {
+            // Redirect to the main game page to start a new game
+            console.log("reset CALLED")
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>

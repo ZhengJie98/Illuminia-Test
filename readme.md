@@ -1,0 +1,3 @@
+1. Launch venv with ....
+   1. Scripts\activate
+2. Pip install -r requirements.txt

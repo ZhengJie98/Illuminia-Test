@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing head content -->
+</head>
+<body>
+    <form>
+        <button type="button" onclick="resetStorage()">reset</button>
+    </form>
+
+    <h1>Number Display</h1>
+    <p>Number 1: {{ number1 }}</p>
+    <p>Number 2: {{ number2 }}</p>
+    <p>Operator: {{ chosen_operator }}</p>
+    <!-- , give 2 d.p if it's divide -->
+    <!-- Display the countdown timer -->
+    <p>Time remaining: <span id="timer"></span></p>
+    
+    <!-- Display the current score -->
+    <p>Score: <span id="score">0</span></p>
+
+    <form id="numberForm" action="/" method="post">
+        <label for="user_input">Enter a number:</label>
+        <input type="number" id="user_input" name="user_input" required>
+        <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+   
+
+    <script>
+        var remainingTime;  // Variable to store the remaining time
+        // var score // Variable to store the score
+        // Initialize the timer when the page loads
+        // var score = localStorage.getItem('score', score) ? score : 0  ;
+        var score = localStorage.getItem('score', score) ;
+        score = score || 0 
+
+        console.log("score:", score)
+
+        document.getElementById('score').textContent = score;
+
+        window.onload = function () {
+            var timerDisplay = document.getElementById('timer');
+            var remainingTime = localStorage.getItem('remainingTime');
+            // var score = localStorage.getItem('score', score) ? score : 0  ;
+
+            console.log("remainingTime:", remainingTime)
+
+            // Use remainingTime if available and it's a valid number
+            if (remainingTime && !isNaN(parseFloat(remainingTime))) {
+                startTimer(parseFloat(remainingTime), timerDisplay);
+            } else {
+                // Start the timer from 60 seconds if remainingTime is not available or not a valid number
+                startTimer(10, timerDisplay);
+            }
+            // if (score && !isNaN(parseFloat(score))) {
+            //     console.log("score exists")
+                // document.getElementById('score').textContent = score;
+            // } 
+            
+
+            
+        }
+
+   
+        
+        function resetStorage() {
+            console.log("reset CALLED")
+            localStorage.clear();
+            sessionStorage.clear();
+            // localStorage.setItem('score',0)
+        }
+
+        function checkAnswer() {
+            // Get user input and answer from the backend
+            var userInput = parseFloat(document.getElementById('user_input').value);
+            var correctAnswer = {{ answer }};
+
+            console.log("check answer called, current score:", score)
+
+            // Compare user input with the correct answer
+            if (userInput === correctAnswer) {
+                // If correct, save the remaining time
+                remainingTime = getRemainingTime();
+                var encodedRemainingTime = encodeURIComponent(remainingTime);
+                localStorage.setItem('remainingTime', remainingTime);
+
+                // Increment the score by 1
+                score = parseInt(score)
+                score += 1;
+                console.log("correct answer is given, new score:", score)
+
+                // Update the score display
+                document.getElementById('score').textContent = score;
+                localStorage.setItem('score', score);
+                console.log("set score done, score", score)
+
+
+                // Reload the page
+                location.reload();
+            } else {
+                // If incorrect, deduct the score by 1 and update the page accordingly
+                // For demonstration purposes, let's show an alert
+                alert('Incorrect! Deducting score...');
+                
+                // Deduct the score by 1
+                score = parseInt(score)
+                score = score - 1;
+                console.log("score after deducting:", score)
+                // Update the score display
+                document.getElementById('score').textContent = score;
+                localStorage.setItem('score', score);
+
+            }
+        }
+
+        function getRemainingTime() {
+            // Get the remaining time from the timer span
+            var timerSpan = document.getElementById('timer');
+            var timeArray = timerSpan.textContent.split(":");
+            var remainingSeconds = parseInt(timeArray[0]) * 60 + parseInt(timeArray[1]);
+            return remainingSeconds;
+        }
+
+        // Countdown timer function
+        function startTimer(duration, display) {
+            var timer = parseFloat(remainingTime) || duration;  // Parse remaining time as float and use if available
+            var minutes, seconds;
+            var intervalId = setInterval(function () {
+                minutes = Math.floor(timer / 60);
+                seconds = timer % 60;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+            clearInterval(intervalId);
+            
+            // Redirect to game_over.html with the score as a query parameter
+            window.location.href = "/game_over?score=" + score;
+        }
+    }, 1000);
+        }
+
+        
+    </script>
+</body>
+</html>
