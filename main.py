@@ -21,8 +21,11 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+
 @app.route('/test')
 def test():
+    session.clear()
+
     return "testing test"
 
 @app.route('/home')
@@ -35,11 +38,29 @@ def home():
 
 @app.route('/game_over')
 def game_over():
+
+    score = request.args.get('score', type=int)
+    print("game_over score:", score)
+    session['latest_score'] = score
     
-    return render_template('game_over.html')
+    # Do something with the score, for example, store it in the session
+    if score is not None and (score > session['high_score']) :
+        session['high_score'] = score
+    
+    return render_template('game_over.html', score=score)
 
 @app.route("/", methods=['post', 'get'])
 def main():
+
+    # if not session.get('high_score'):
+    if 'high_score' not in session:
+        print("initialising session score")
+        session['high_score'] = 0
+        session['latest_score'] = 0
+
+    
+    high_score = session['high_score']
+    latest_score = session['latest_score']
 
     # print("===in main method===")
     if request.method == 'POST':
@@ -50,7 +71,7 @@ def main():
         # return url_for("game", operation = operation)
         return redirect(url_for('game', operation=operation))
 
-    return render_template('choose_game.html')
+    return render_template('choose_game.html', high_score=high_score, latest_score=latest_score)
 
 #assign URLs to have a particular route 
 global seen_list
@@ -141,12 +162,6 @@ def generate_pair():
     number2 = random.randint(0, 12)
     return number1, number2
 
-# def get_unique_pair():
-#     while True:
-#         pair = generate_pair()
-#         if pair not in appeared_pairs:
-#             appeared_pairs.append(pair)
-#             return pair
 
 @app.route("/login", methods=["POST", "GET"])
 def login():

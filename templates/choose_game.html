@@ -23,14 +23,28 @@
     <button type="submit">Play</button>
   </form>
 
+  <p>Current High Score: {{high_score}}</p>
+  <p>Latest Score: {{latest_score}}</p>
+
+  <!-- <form>
+    <button type="button" onclick="resetStorage()">reset</button>
+</form> -->
+
+
+
   <script>
     function play() {
       var selectedOperation = document.getElementById("mathOperation").value;
-    //   console.log("heheheh")
-    //   window.location.href = "/game?operation=" + selectedOperation;
-
-      // Add your logic here to perform an action based on the selected operation
     }
+
+    // function resetStorage() {
+    //         console.log("reset CALLED")
+    //         localStorage.clear();
+    //         sessionStorage.clear();
+    //         location.reload();
+
+    //         // localStorage.setItem('score',0)
+    //     }
   </script>
 
 </body>
