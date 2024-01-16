@@ -38,15 +38,35 @@ def game_over():
     
     return render_template('game_over.html')
 
+@app.route("/", methods=['post', 'get'])
+def main():
+
+    # print("===in main method===")
+    if request.method == 'POST':
+        # print("in main method but post called")
+        operation = request.form.get('mathOperation')
+        # print("Operation:", operation)
+        # print("redirecting..")
+        # return url_for("game", operation = operation)
+        return redirect(url_for('game', operation=operation))
+
+    return render_template('choose_game.html')
+
 #assign URLs to have a particular route 
 global seen_list
 seen_list = []
-@app.route("/", methods=['post', 'get'])
-def index():
+@app.route("/game", methods=['post', 'get'])
+def game():
     message = ''
 
     if request.method == 'POST':
-        print("POST METHOD CALLED")
+        print("POST METHOD CALLED FOR GAME")
+        operation = request.form['mathOperation']
+        session['operation'] = operation
+        print("operation in /game:", operation)
+    else:
+        operation = session['operation']
+        print("current session['operation']:", operation)
 
     print("seen_list:", seen_list)
     while True:
@@ -58,33 +78,63 @@ def index():
             break
 
     ## check if pair has appeared, if not appeared then add to list and continue, else if appeared then keep re-roll:
+    if operation == "all":
+        operator = '+-X÷'
+        chosen_operator = operator[random.randint(0,3)]
+        print("chosen_operator:", chosen_operator)
+        try:
+            if chosen_operator == '+':
+                answer = number1+number2
+            elif chosen_operator == '-':
+                answer = number1-number2
+            elif chosen_operator == 'X':
+                answer = number1*number2
+            elif chosen_operator == '÷':
+                answer = number1/number2
+                answer = round(answer,2)
+        except:
+            ## catch divided by 0 error
+            chosen_operator = operator[random.randint(0,2)]
+            if chosen_operator == '+':
+                answer = number1+number2
+            elif chosen_operator == '-':
+                answer = number1-number2
+            elif chosen_operator == 'X':
+                answer = number1*number2
+        # print("answer:", answer)
+                
+        # return render_template('game.html', number1=number1, number2=number2, chosen_operator=chosen_operator, answer=answer)
 
-    operator = '+-X÷'
-    chosen_operator = operator[random.randint(0,3)]
-    print("chosen_operator:", chosen_operator)
-    try:
-        if chosen_operator == '+':
-            answer = number1+number2
-        elif chosen_operator == '-':
-            answer = number1-number2
-        elif chosen_operator == 'X':
-            answer = number1*number2
-        elif chosen_operator == '÷':
-            answer = number1/number2
-            answer = round(answer,2)
-    except:
-        ## catch divided by 0 error
-        chosen_operator = operator[random.randint(0,2)]
-        if chosen_operator == '+':
-            answer = number1+number2
-        elif chosen_operator == '-':
-            answer = number1-number2
-        elif chosen_operator == 'X':
-            answer = number1*number2
-    print("answer:", answer)
-            
-    return render_template('game.html', number1=number1, number2=number2, chosen_operator=chosen_operator, answer=answer)
+    elif operation =="addition":
+        answer = number1+number2
+        chosen_operator = "+"
+    
+    elif operation =="subtraction":
+        answer = number1-number2
+        chosen_operator = '-'
 
+    elif operation == "multiplication":
+        answer = number1*number2
+        chosen_operator = 'X'
+
+    elif operation =="division":
+        chosen_operator = '÷'
+        try:
+            answer = round(number1/number2,2)
+        except:
+            while True:
+                number1, number2 = generate_pair()
+                if (number1, number2) not in seen_list:
+                    seen_list.append((number1,number2))
+                    
+                    try: 
+                        answer = round(number1/number2,2)
+                        break
+                    except:
+                        continue
+
+    print('answer:', answer)
+    return render_template('game.html', number1=number1, number2=number2, chosen_operator=chosen_operator, answer=answer, operation=operation)
 
 def generate_pair():
     number1 = random.randint(0, 12)

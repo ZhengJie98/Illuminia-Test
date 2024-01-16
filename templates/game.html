@@ -27,6 +27,7 @@
    
 
     <script>
+     
         var remainingTime;  // Variable to store the remaining time
         // var score // Variable to store the score
         // Initialize the timer when the page loads
@@ -37,6 +38,13 @@
         console.log("score:", score)
 
         document.getElementById('score').textContent = score;
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && document.activeElement.id === 'user_input') {
+                event.preventDefault()
+                checkAnswer();
+            }
+        });
 
         window.onload = function () {
             var timerDisplay = document.getElementById('timer');
