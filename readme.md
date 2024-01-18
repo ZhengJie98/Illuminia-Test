@@ -1,7 +1,7 @@
 1. Launch venv with command
 
    1. game_venv\Scripts\activate
-2. Pip install -r requirements.txt
+2. Install requirements with "pip install -r requirements.txt"
 3. Launch App by running main.py file
 4. Project suggestions:
 
