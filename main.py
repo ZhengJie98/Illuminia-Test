@@ -24,13 +24,6 @@ def test():
 
     return "testing test"
 
-@app.route('/home')
-def home():
-    if "email" not in session:
-        return redirect(url_for("login"))
-    
-    return render_template('home.html')
-
 
 @app.route('/game_over')
 def game_over():
@@ -158,53 +151,6 @@ def generate_pair():
     number2 = random.randint(0, 12)
     return number1, number2
 
-
-@app.route("/login", methods=["POST", "GET"])
-def login():
-    message = 'Please login to your account'
-    if "email" in session:
-        return redirect(url_for("logged_in"))
-
-    if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
-
-        #check if email exists in database
-        email_found = records.find_one({"email": email})
-        if email_found:
-            email_val = email_found['email']
-            passwordcheck = email_found['password']
-            #encode the password and check if it matches
-            if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
-                session["email"] = email_val
-                return redirect(url_for('logged_in'))
-            else:
-                if "email" in session:
-                    return redirect(url_for("logged_in"))
-                message = 'Wrong password'
-                return render_template('login.html', message=message)
-        else:
-            message = 'Email not found'
-            return render_template('login.html', message=message)
-    return render_template('login.html', message=message)
-
-@app.route('/logged_in')
-def logged_in():
-    if "email" in session:
-        email = session["email"]
-        # return render_template('logged_in.html', email=email)
-        # return render_template('home.html')
-        return redirect(url_for("home"))
-    else:
-        return redirect(url_for("login"))
-
-@app.route("/logout", methods=["POST", "GET"])
-def logout():
-    if "email" in session:
-        session.pop("email", None)
-        return render_template("signout.html")
-    else:
-        return render_template('index.html')
 
 
 
