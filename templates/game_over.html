@@ -3,11 +3,25 @@
 <head>
     <!-- Your existing head content -->
 </head>
+
+<style>
+    #replayButton {
+        background-color: #008CBA; /* Blue background color */
+        color: white; /* White text color */
+        padding: 10px 15px; /* Add some padding */
+        font-size: 16px; /* Increase font size */
+        border: none; /* Remove border */
+        cursor: pointer; /* Add a cursor pointer on hover */
+        border-radius: 5px; /* Add rounded corners */
+        margin-top: 10px; /* Add some margin from the form */
+    }
+</style>
+
 <body>
     <h1>Game Over</h1>
     <p>Your Score: <span id="finalScore"></span></p>
 
-    <button onclick="replayGame()">Replay Game</button>
+    <button id='replayButton' onclick="replayGame()">Replay Game</button>
 
     <script>
         window.onload = function () {

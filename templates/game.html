@@ -3,27 +3,59 @@
 <head>
     <!-- Your existing head content -->
 </head>
+
+<style>
+    /* Style for the form button */
+    #numberForm button {
+        background-color: #4CAF50; /* Green background color */
+        color: white; /* White text color */
+        padding: 10px 15px; /* Add some padding */
+        font-size: 16px; /* Increase font size */
+        border: none; /* Remove border */
+        cursor: pointer; /* Add a cursor pointer on hover */
+        border-radius: 5px; /* Add rounded corners */
+        margin-top: 10px; /* Add some margin from the input field */
+    }
+
+    /* Style for the replay button */
+    #replayButton {
+        background-color: #008CBA; /* Blue background color */
+        color: white; /* White text color */
+        padding: 10px 15px; /* Add some padding */
+        font-size: 16px; /* Increase font size */
+        border: none; /* Remove border */
+        cursor: pointer; /* Add a cursor pointer on hover */
+        border-radius: 5px; /* Add rounded corners */
+        margin-top: 10px; /* Add some margin from the form */
+    }
+</style>
+
 <body>
     <!-- <form>
         <button type="button" onclick="resetStorage()">reset</button>
     </form> -->
 
     <h1>Number Display</h1>
-    <p>Number 1: {{ number1 }}</p>
+    <!-- <p>Number 1: {{ number1 }}</p>
     <p>Number 2: {{ number2 }}</p>
-    <p>Operator: {{ chosen_operator }}</p>
-    <!-- , give 2 d.p if it's divide -->
+    <p>Operator: {{ chosen_operator }}</p> -->
+    <p> Q: {{ number1 }} {{ chosen_operator }} {{ number2 }} = ? </p>
+    
     <!-- Display the countdown timer -->
     <p>Time remaining: <span id="timer"></span></p>
     
     <!-- Display the current score -->
     <p>Score: <span id="score">0</span></p>
 
+    
+    <!-- Your HTML code with the updated styles -->
     <form id="numberForm" action="/" method="post">
         <label for="user_input">Enter a number:</label>
         <input type="number" id="user_input" name="user_input" required>
         <button type="button" onclick="checkAnswer()">Submit</button>
     </form>
+    
+    <button id="replayButton" onclick="replayGame()">Main Menu</button>
    
 
     <script>
@@ -58,7 +90,7 @@
                 startTimer(parseFloat(remainingTime), timerDisplay);
             } else {
                 // Start the timer from 60 seconds if remainingTime is not available or not a valid number
-                startTimer(10, timerDisplay);
+                startTimer(60, timerDisplay);
             }
             // if (score && !isNaN(parseFloat(score))) {
             //     console.log("score exists")
@@ -95,20 +127,20 @@
                 // Increment the score by 1
                 score = parseInt(score)
                 score += 1;
-                console.log("correct answer is given, new score:", score)
+                // console.log("correct answer is given, new score:", score)
 
                 // Update the score display
                 document.getElementById('score').textContent = score;
                 localStorage.setItem('score', score);
-                console.log("set score done, score", score)
-
+                // console.log("set score done, score", score)
+                // alert("correct! Score +1")
 
                 // Reload the page
                 location.reload();
             } else {
                 // If incorrect, deduct the score by 1 and update the page accordingly
                 // For demonstration purposes, let's show an alert
-                alert('Incorrect! Deducting score...');
+                alert('Incorrect! Deducting score -1');
                 
                 // Deduct the score by 1
                 score = parseInt(score)
@@ -149,6 +181,14 @@
             window.location.href = "/game_over?score=" + score;
         }
     }, 1000);
+        }
+
+        function replayGame() {
+            // Redirect to the main game page to start a new game
+            console.log("reset CALLED")
+            localStorage.clear();
+            // sessionStorage.clear();
+            window.location.href = "/";
         }
 
         

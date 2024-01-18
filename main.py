@@ -92,8 +92,8 @@ def game():
     print("seen_list:", seen_list)
     while True:
         number1, number2 = generate_pair()
-        print("number1:", number1)
-        print("number2:", number2)
+        # print("number1:", number1)
+        # print("number2:", number2)
         if (number1, number2) not in seen_list:
             seen_list.append((number1,number2))
             break

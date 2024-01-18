@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Operation Selector</title>
 </head>
+
+<style>
+    #playButton {
+        background-color: #4CAF50; /* Green background color */
+        color: white; /* White text color */
+        padding: 10px 15px; /* Add some padding */
+        font-size: 16px; /* Increase font size */
+        border: none; /* Remove border */
+        cursor: pointer; /* Add a cursor pointer on hover */
+        border-radius: 5px; /* Add rounded corners */
+        margin-top: 10px; /* Add some margin from the input field */
+    }
+
+</style>
 <body>
 
   <h1>Select a Math Operation:</h1>
@@ -20,9 +34,10 @@
 
     </select>
 
-    <button type="submit">Play</button>
+    <button id="playButton" type="submit">Play</button>
   </form>
 
+  <p> Note: For <b>division</b>, if answer has &gt; <b>2 d.p</b>, round down to <b>2 d.p</b> </p>
   <p>Current High Score: {{high_score}}</p>
   <p>Latest Score: {{latest_score}}</p>
 
